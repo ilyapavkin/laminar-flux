@@ -2,6 +2,7 @@ import configureMockStore from 'redux-mock-store';
 import { getDefaultPipeline } from '../src/api';
 import { TestModelInstance, testModelLaminator } from './helpers/testmodel';
 import { FluxModelCtl } from '../src/model';
+import { AnyObject } from '../src/types/common';
 
 
 // const middlewares = [];
@@ -10,9 +11,9 @@ const store = mockStore({});
 const pipeline = getDefaultPipeline();
 pipeline.dispatch = store.dispatch;
 const unarmedPromise = (): void => { throw new Error('Promise was not armed!'); }
-let sendPromise: (state: object) => void = unarmedPromise;
-const armPromise = (): Promise<object> => new Promise<object>((resolve) => {
-    sendPromise = (state: object): void => {
+let sendPromise: (state: AnyObject) => void = unarmedPromise;
+const armPromise = (): Promise<AnyObject> => new Promise<AnyObject>((resolve) => {
+    sendPromise = (state: AnyObject): void => {
         resolve(state);
         sendPromise = unarmedPromise;
     };

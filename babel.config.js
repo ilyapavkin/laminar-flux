@@ -1,3 +1,5 @@
+const { NODE_ENV } = process.env
+
 module.exports = {
     presets: [
         '@babel/preset-typescript',
@@ -14,5 +16,10 @@ module.exports = {
             }
         ],
     ],
-    plugins: []
+    plugins: [
+        // don't use `loose` mode here - need to copy symbols when spreading
+        '@babel/proposal-object-rest-spread',
+        '@babel/plugin-proposal-class-properties',
+        NODE_ENV === 'test' && '@babel/transform-modules-commonjs'
+      ].filter(Boolean)
 };

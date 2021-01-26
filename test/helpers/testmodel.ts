@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import Laminate, { FluxModel } from '../../src/model';
 import { attach, reducer /* , effect, saga */ } from '../../src/decorators';
-import { LFAction, LFState } from '../../src/index';
+import { LFAction, LFState } from '../../src/types/internal';
 
 @attach()
 class TestModel extends FluxModel {
@@ -27,7 +27,7 @@ class TestModel extends FluxModel {
     } */
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const testModelLaminator = () => new (Laminate(TestModel));
 type TestModelInstance = ReturnType<typeof testModelLaminator>;
 

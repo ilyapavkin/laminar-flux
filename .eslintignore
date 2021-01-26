@@ -2,9 +2,12 @@
 **/node_modules/*
 babel.config.js
 jest.config.js
+rollup.config.js
 
 dist/
 lib/
 cache/
 coverage/
 es/
+
+*.spec.ts.off

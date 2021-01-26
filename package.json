@@ -3,7 +3,16 @@
     "version": "0.1.0",
     "description": "Flux model",
     "main": "lib/laminar-flux.js",
+    "unpkg": "dist/laminar-flux.js",
+    "module": "es/laminar-flux.js",
     "types": "./types",
+    "files": [
+        "dist",
+        "lib",
+        "es",
+        "src",
+        "types"
+    ],
     "scripts": {
         "clean": "rimraf lib dist es coverage cache",
         "format": "prettier --write \"{src,test}/**/*.{js,ts}\" \"**/*.md\"",
@@ -43,6 +52,9 @@
         "@babel/core": "^7.11.6",
         "@babel/plugin-proposal-class-properties": "^7.12.1",
         "@babel/plugin-proposal-decorators": "^7.10.5",
+        "@babel/plugin-proposal-object-rest-spread": "^7.12.1",
+        "@babel/plugin-transform-modules-commonjs": "^7.12.1",
+        "@babel/plugin-transform-runtime": "^7.12.10",
         "@babel/preset-env": "^7.11.5",
         "@babel/preset-typescript": "^7.10.4",
         "@rollup/plugin-babel": "^5.2.2",
@@ -54,6 +66,7 @@
         "@typescript-eslint/eslint-plugin": "^4.14.0",
         "@typescript-eslint/parser": "^4.14.0",
         "babel-eslint": "^10.1.0",
+        "babel-jest": "^26.6.3",
         "eslint-config-airbnb-typescript": "^12.0.0",
         "eslint-config-prettier": "^7.2.0",
         "eslint-import-resolver-typescript": "^2.0.0",
@@ -74,14 +87,17 @@
         "rollup-plugin-terser": "^7.0.2",
         "rollup-plugin-typescript2": "^0.29.0",
         "ts-jest": "^26.4.4",
-        "typescript": "^4.1.3"
+        "typescript": "^4.1.3",
+        "typings-tester": "^0.3.2"
     },
     "dependencies": {
-        "@babel/plugin-transform-runtime": "^7.12.10",
         "@babel/runtime": "^7.12.5",
         "react-redux": "^7.2.0",
         "redux": "^4.0.5",
-        "redux-saga": "^1.1.3",
         "typesafe-actions": "^5.1.0"
+    },
+    "jest": {
+        "testRegex": "(/test/.*\\.spec\\.[tj]s)$",
+        "coverageProvider": "v8"
     }
 }

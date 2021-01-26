@@ -1,4 +1,3 @@
-
 import nodeResolve from '@rollup/plugin-node-resolve';
 import typescript from 'rollup-plugin-typescript2';
 import babel from '@rollup/plugin-babel';
@@ -41,8 +40,7 @@ export default [
             babel({
                 extensions,
                 plugins: [
-                    ['@babel/plugin-transform-runtime', { version: babelRuntimeVersion }],
-                    '@babel/plugin-proposal-class-properties'
+                    ['@babel/plugin-transform-runtime', { version: babelRuntimeVersion }]
                 ],
                 babelHelpers: 'runtime'
             }),
@@ -68,8 +66,7 @@ export default [
                     [
                         '@babel/plugin-transform-runtime',
                         { version: babelRuntimeVersion, useESModules: true },
-                    ],
-                    '@babel/plugin-proposal-class-properties'
+                    ]
                 ],
                 babelHelpers: 'runtime'
             }),
@@ -77,7 +74,7 @@ export default [
     },
 
     // UMD Development
-    /*{
+    {
         input: 'src/index.ts',
         output: {
             file: 'dist/laminar-flux.js',
@@ -130,5 +127,5 @@ export default [
                 },
             }),
         ],
-    },*/
+    },
 ];

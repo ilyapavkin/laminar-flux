@@ -1,0 +1,40 @@
+{
+    "editor.formatOnSave": true,
+    "[javascript]": {
+        "editor.formatOnSave": false
+    },
+    "eslint.alwaysShowStatus": true,
+    "files.eol": "\n",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "flow.enabled": false,
+    "editor.semanticHighlighting.enabled": true,
+    "editor.detectIndentation": false,
+    "editor.tabSize": 4,
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescriptreact",
+        "typescript",
+    ],
+    "javascript.format.enable": false,
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/*.code-search": true,
+        "**/cache": true,
+        "**/coverage": true,
+        "**/lib": true
+    },
+    "js/ts.implicitProjectConfig.experimentalDecorators": true,
+    "plantuml.diagramsRoot": "docs/diagrams/uml/src",
+    "plantuml.exportOutDir": "docs/out/uml",
+    "cSpell.words": [
+        "Dispatchable",
+        "applicate",
+        "attachables",
+        "esnext",
+        "typer"
+    ]
+}
