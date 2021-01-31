@@ -72,6 +72,10 @@ module.exports = {
         'react/destructuring-assignment': 0*/
         'jsdoc/check-alignment': 1,
         'jsdoc/check-indentation': 1,
-        'jsdoc/check-param-names': 1
+        'jsdoc/check-param-names': 1,
+        'no-warning-comments': [1, {
+            terms: ['todo', 'fixme'],
+            location: 'anywhere'
+        }]
     }
 };

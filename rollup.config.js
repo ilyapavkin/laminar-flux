@@ -8,6 +8,7 @@ import pkg from './package.json';
 
 const extensions = ['.ts']
 const noDeclarationFiles = { compilerOptions: { declaration: false } }
+const noTestsFiles = { include: ['./src/**/*'], exclude: ['./test/**/*'] };
 
 const makeExternalPredicate = (externalArr) => {
     if (externalArr.length === 0) {
@@ -36,7 +37,7 @@ export default [
             nodeResolve({
                 extensions,
             }),
-            typescript({ useTsconfigDeclarationDir: true }),
+            typescript({ useTsconfigDeclarationDir: true, tsconfigOverride: noTestsFiles }),
             babel({
                 extensions,
                 plugins: [
@@ -59,7 +60,7 @@ export default [
             nodeResolve({
                 extensions,
             }),
-            typescript({ tsconfigOverride: noDeclarationFiles }),
+            typescript({ tsconfigOverride: {...noDeclarationFiles, ...noTestsFiles} }),
             babel({
                 extensions,
                 plugins: [
@@ -86,7 +87,7 @@ export default [
             nodeResolve({
                 extensions,
             }),
-            typescript({ tsconfigOverride: noDeclarationFiles }),
+            typescript({ tsconfigOverride: {...noDeclarationFiles, ...noTestsFiles} }),
             babel({
                 extensions,
                 exclude: 'node_modules/**',
@@ -110,7 +111,7 @@ export default [
             nodeResolve({
                 extensions,
             }),
-            typescript({ tsconfigOverride: noDeclarationFiles }),
+            typescript({ tsconfigOverride: {...noDeclarationFiles, ...noTestsFiles} }),
             babel({
                 extensions,
                 exclude: 'node_modules/**',

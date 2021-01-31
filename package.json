@@ -14,7 +14,7 @@
         "types"
     ],
     "scripts": {
-        "clean": "rimraf lib dist es coverage cache",
+        "clean": "rimraf lib dist es coverage cache types",
         "format": "prettier --write \"{src,test}/**/*.{js,ts}\" \"**/*.md\"",
         "format:check": "prettier --list-different \"{src,test}/**/*.{js,ts}\" \"**/*.md\"",
         "lint": "eslint --ext .js,.ts,.d.ts src",
@@ -22,6 +22,7 @@
         "types:check": "tsc --noEmit",
         "test": "jest",
         "test:watch": "yarn test --watch",
+        "test:debug": "yarn test --collectCoverage=false --reporters jest-silent-reporter",
         "test:coverage": "yarn test --coverage",
         "build": "rollup -c",
         "docs": "jsdoc2md --files ./src/*.ts --configure ./jsdoc2md.json > ./docs/readme.md",
@@ -75,6 +76,7 @@
         "eslint-plugin-prettier": "^3.1.3",
         "fetch-mock": "^9.5.1",
         "jest": "^26.6.3",
+        "jest-silent-reporter": "^0.4.0",
         "jsdoc-babel": "^0.5.0",
         "jsdoc-to-markdown": "^6.0.1",
         "prettier": "^2.2.1",

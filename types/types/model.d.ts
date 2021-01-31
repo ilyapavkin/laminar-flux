@@ -5,9 +5,6 @@ import { LFReducer, LFPayload, LFAction, LFState } from './internal';
 /**
  * FluxModel call handler. (not implemented yet)
  */
-export declare type LFCallHandle = {
-    cancel: () => void;
-};
 export declare type ModelMethodDecorationExtension = PayloadActionCreator<TypeConstant, LFPayload> & {
     type: TypeConstant;
     namespace?: string;

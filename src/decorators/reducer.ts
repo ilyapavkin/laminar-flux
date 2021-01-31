@@ -1,3 +1,4 @@
+import { trace } from 'src/utils/trace';
 import { LFState, LFAction, LFPayload } from '../types/internal';
 import { DispatchAttribute } from '../types/model';
 
@@ -15,12 +16,14 @@ export function reducer<
     const type = `@@LF:${namespace}/${propertyName}`;
     const wrapped = target[propertyName];
     const executor = (payloadContents: LFPayload, ...args: []): LFState | undefined => {
+        trace('executor called');
         const self = executor as ModelReducerDecorator;
         if (args.length === 0) {
             if (!self.dispatch) {
                 throw new Error(`Dispatcher not available for method [${propertyName}]`);
             }
-            self.dispatch(self.action(payloadContents));
+            trace('dispatching!');
+            trace(self.dispatch(self.action(payloadContents)));
             return undefined;
         }
 

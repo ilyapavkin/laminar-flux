@@ -1,12 +1,12 @@
 import Laminate from './model';
-import __DO_NOT_USE__ActionTypes from './utils/actionTypes'
-
-export { Laminate, __DO_NOT_USE__ActionTypes }
+import LFPipeline from './pipeline';
 
 export {
-    createStore,
-    getDefaultPipeline
-} from './api';
+    Laminate,
+    LFPipeline as Pipeline
+};
+
+export * from './api';
 
 export {
     attach,
@@ -14,7 +14,14 @@ export {
 } from './decorators';
 
 export {
+    LFPipelineSettings as PipelineSettings
+} from './pipeline';
+
+export {
     FluxModel,
     FluxModelCtl
 } from './model'
 
+export type {
+    LFState as State
+} from './types/internal';

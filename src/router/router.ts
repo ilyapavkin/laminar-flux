@@ -1,5 +1,6 @@
 import { checkReducerValid } from 'src/utils/validation';
 import { warning } from 'src/utils/warning';
+import { trace } from 'src/utils/trace';
 import { PlainObject, isPlainObject } from '../types/common';
 import { RouterHandler } from '../types/router';
 import { ModelEndpoint, ModelSyncEndpoint } from '../types/model';
@@ -150,8 +151,9 @@ const LFRouter = <S extends LFState = LFState, A extends LFAction = LFAction>():
 
 
     const func: RouterHandler<S, A> = (state?, action?): S => {
+        trace('router called', action);
         const currentState = state;
-        if (action === undefined) {
+        if (action === undefined || action.type === undefined) {
             throw new Error('Undefined action');
         }
 
@@ -159,25 +161,38 @@ const LFRouter = <S extends LFState = LFState, A extends LFAction = LFAction>():
             return broadcastReducer(currentState, action);
         }
 
-        const update = broadcastReducer !== undefined ? broadcastReducer(currentState, action) : {};
-
-        if (routeTable[action.type] !== undefined) {
-            const endpoints = routeTable[action.type];
-            Object.assign(update, {
-                '@@LF_CTX': endpoints.map(endpoint => {
-                    const reducer = endpoint.endpoint;
-                    if (reducer.constructor.name !== 'AsyncFunction') {
-                        // FIXME: cast as LFStateEntry in following line is actually a mistake.
-                        // TODO: figure out proper way to work with combinedReducers from `redux`.
-                        const res = (reducer as ModelSyncEndpoint)(((currentState as PlainObject)['@@LF_CTX'] as LFStateEntry)[endpoint.namespace] as LFState, action);
-                        return { [endpoint.namespace]: res };
-                    }
-                    return currentState;
-                }).reduce((acc, val) => Object.assign(acc, val), {})
-            }); // FIXME: is it even valid?
+        if (action.type.startsWith('@@LF')) {
+            trace('Routed action', action);
+            trace('Routing table', routeTable);
         }
 
-        return update as S;
+        // Peek updated state from assigned (non-default) combined reducer and include it in package, if exists.
+        // Use empty package otherwise.
+        const nextState: LFState = broadcastReducer !== undefined ? broadcastReducer(currentState, action) : {};
+        // let hasChanged = false;
+        if (routeTable[action.type] !== undefined) {
+            const endpoints = routeTable[action.type];
+            if (endpoints === undefined) {
+                // FIXME: should handle
+            }
+            endpoints.map(el => {
+                // check if endpoint actually reducer (not effect)
+                if (el.endpoint.constructor.name !== 'AsyncFunction') {
+                    // Take state partition
+                    const currentStatePart = (currentState as PlainObject)[el.namespace] as LFState;
+                    const nextStatePart = (el.endpoint as ModelSyncEndpoint)(currentStatePart, action);
+                    if (nextStatePart === undefined) {
+                        // FIXME: should throw
+                    }
+                    nextState[el.namespace] = nextStatePart;
+                    // hasChanged = hasChanged || nextStatePart !== currentStatePart
+                    return { [el.namespace]: nextStatePart };
+                }
+                return undefined;
+            });// .filter(el => el !== undefined); // FIXME: probably pointless filtering
+        }
+
+        return Object.assign(currentState || {}, nextState) as S;
     }
 
     func.add = (reducer: LFModelReducer<S, A>, namespace?: string, actionType?: string): void => {
@@ -221,6 +236,7 @@ const LFRouter = <S extends LFState = LFState, A extends LFAction = LFAction>():
             const alter = rebuildTable(update);
             // Apply to table
             Object.keys(alter).forEach(type => { routeTable[type] = alter[type]; });
+            trace('alter', alter, routeTable);
         }
     }
 
@@ -244,13 +260,19 @@ const LFRouter = <S extends LFState = LFState, A extends LFAction = LFAction>():
         // FIXME: slow?
         const newTable: LFRouteTable<S, A> = {};
         Object.keys(alter).filter(type => alter[type].length).forEach(type => { newTable[type] = alter[type] });
+        trace('rewriting table');
         routeTable = newTable;
     }
 
-    func.remove = (reducer: LFModelReducer<S, A>/* , actionType?: string, namespace?: string */): void => {
+    func.remove = (reducer: LFModelReducer<S, A>, actionType?: string, /* namespace?: string */): void => {
         // FIXME: no implementation for specific action type and namespace
+        trace('removing', actionType);
         removeAll(reducer);
     }
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    func.getTable = () => ({ ...routeTable });
 
     return func;
 }

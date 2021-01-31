@@ -1,6 +1,4 @@
 // @ts-nocheck
-import { createStoreContent } from '../../helpers/store';
-
 import {
     createStore,
     combineReducers,
@@ -54,8 +52,7 @@ describe('createStore', () => {
         expect(() => createStore(() => { })).toThrow()
     })
 
-    // Original test is no longer correct. Contents of user-defined reducer is stored under `@@LF_GLOBAL_CTX`
-    /*it('passes the initial state', () => {
+    it('passes the initial state', () => {
         const store = createStore(reducers.todos, [
             {
                 id: 1,
@@ -67,21 +64,7 @@ describe('createStore', () => {
                 id: 1,
                 text: 'Hello'
             }
-        ]) 
-    })*/
-
-    it('passes the initial state', () => {
-        const contents = createStoreContent({
-            global: [
-                {
-                    id: 1,
-                    text: 'Hello'
-                }
-            ]
-        });
-
-        const store = createStore(reducers.todos, contents)
-        expect(store.getState()).toEqual(contents)
+        ])
     })
 
     it('applies the reducer to the previous state', () => {

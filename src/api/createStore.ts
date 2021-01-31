@@ -4,6 +4,7 @@
 import LFPipeline from 'src/pipeline/LFPipeline';
 import { Store, StoreEnhancer, PreloadedState, createStore as createStoreProxy } from 'redux';
 import { LFReducer, LFAction, LFState } from '../types/internal';
+import setDefaultPipeline from './setDefaultPipeline';
 
 type ExtendState<State, Extension> = [Extension] extends [never]
     ? State
@@ -124,12 +125,9 @@ export default function createStore<
         )
     }
 
-    /* if (preloadedState) {
-        console.log('preloaded state', preloadedState);
-    }*/
-
     const store = createStoreProxy(defaultPipeline.reducer, preloadedState, enhancer) as Store<ExtendState<S, StateExt>, A> & Ext;
     defaultPipeline.dispatch = store.dispatch;
+    setDefaultPipeline(defaultPipeline);
 
     return store;
 }

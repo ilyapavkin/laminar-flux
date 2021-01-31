@@ -21,7 +21,6 @@ export interface Todo {
 export type TodoAction = { type: 'ADD_TODO'; text: string } | AnyAction
 
 export function todos(state: Todo[] = [], action: TodoAction) {
-    // console.log(state);
     switch (action.type) {
         case ADD_TODO:
             return [

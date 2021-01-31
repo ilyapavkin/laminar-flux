@@ -8,9 +8,10 @@ const testModelNamespace = 'TestModel';
 const testModelStoreReducerActionType = `@@LF:${testModelNamespace}/storeActionReducer`;
 
 @attach()
-class TestModel extends FluxModel {
+class Todos extends FluxModel {
     @reducer
     storeActionReducer(state: LFState, action: LFAction): LFState {
+        console.log('reducing');
         return { ...state, storeActionReducer: action.payload };
     }
 
@@ -27,10 +28,11 @@ class TestModel extends FluxModel {
     */
 }
 
-const testModelLaminator = (): InstanceType<LaminarFluxModel> => new (Laminate(TestModel));
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const testModelLaminator = () => new (Laminate(Todos));
 type TestModelInstance = ReturnType<typeof testModelLaminator>;
 
-export default TestModel;
+export default Todos;
 export type { TestModelInstance };
 export { testModelLaminator };
 export {

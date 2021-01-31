@@ -4,6 +4,7 @@ babel.config.js
 .babelrc
 jest.config.js
 rollup.config.js
+.eslintrc.js
 
 dist/
 lib/

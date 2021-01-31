@@ -4,12 +4,12 @@
  */
 import { Dispatch } from 'redux';
 import { LFAction, LFPayload } from '../types/internal';
-import { ConstructorArgs, AnyObject, Constructor } from '../types/common';
+import { ConstructorArgs, PlainObject, Constructor } from '../types/common';
 import LFPipeline from '../pipeline/LFPipeline';
 import { LFModelBase } from './LFModelBase';
 import { ModelReducerEndpoint, ModelReducerDecorator } from '../decorators/reducer';
 import { ModelEffectEndpoint } from '../decorators/effect';
-declare type TransformMethods<T extends AnyObject, TCallable, TDecorator> = {
+declare type TransformMethods<T extends PlainObject, TCallable, TDecorator> = {
     [P in keyof T]: T[P] extends TCallable ? TDecorator : T[P];
 };
 declare type LaminatorConstructor = Constructor<any>;

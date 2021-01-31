@@ -1,3 +1,6 @@
 import createStore from './createStore';
-export { getDefaultPipeline } from './getDefaultPipeline';
-export { createStore };
+import getDefaultPipeline from './getDefaultPipeline';
+import getPipeline from './getPipeline';
+import dropPipeline from './dropPipeline';
+import setDefaultPipeline from './setDefaultPipeline';
+export { createStore, getDefaultPipeline, getPipeline, dropPipeline, setDefaultPipeline };

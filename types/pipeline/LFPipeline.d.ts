@@ -7,7 +7,7 @@ import LFPipelineContext from './LFPipelineContext';
  * @typicalname Pipeline
  */
 declare class LFPipeline<S extends LFState = LFState, A extends LFAction = LFAction> extends LFPipelineContext<S, A> {
-    attach(actionType: string, model: LFModelReducer<S, A>, namespace: string): void;
-    remove(model: LFModelReducer<S, A>, actionType?: string, namespace?: string): void;
+    attach(model: LFModelReducer<S, A>, namespace?: string, actionType?: string): void;
+    remove(model: LFModelReducer<S, A>, namespace?: string, actionType?: string): void;
 }
 export default LFPipeline;

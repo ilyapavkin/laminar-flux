@@ -4,6 +4,7 @@
  */
 
 import { Dispatch } from 'redux';
+import { trace } from 'src/utils/trace';
 import {
     ModelDispathableMethod,
     DispatchAttribute
@@ -48,25 +49,32 @@ type TransformModel<T extends LaminatorConstructor> = {
  * Main model class.
  */
 export abstract class FluxModel extends LFModelBase {
-    // TODO: clean up somehow...
-    protected dispatch: Dispatch<LFAction> = () => {
-        throw new Error('dispatch was not assigned');
+    protected dispatch: Dispatch<LFAction> = (action) => {
+        trace('inside default dispatch');
+        // FIXME: this should rely on pipeline without checks
+        if (this.pl?.dispatch !== undefined) {
+            trace('calling dispatcher');
+            return this.pl.dispatch(action);
+        }
+        // FIXME: add metadata here:
+        throw new Error(`Model ${this} was not attached to any pipeline before method ${action.type} was called`);
     }
 
     protected set pipeline(pipeline: LFPipeline | null) {
+        trace('updating pipeline of model');
         if (pipeline !== null) {
+            trace('pipeline set');
             this.pl = pipeline;
-            if (pipeline.dispatch !== undefined) {
-                this.dispatch = pipeline.dispatch;
-            }
         }
         this.attachables.forEach(a => {
             if (this.pl) {
                 // check if pipeline changed
                 if (pipeline !== this.pl) {
+                    trace('detaching from old pipeline');
                     // detach from current pipeline;
                     this.pl.remove(a as never as LFModelReducer, a.action.namespace || this.constructor.name, a.action.type);
                 }
+                trace('attaching to new pipeline', a.action.type);
                 this.pl.attach(a as never as LFModelReducer, a.action.namespace || this.constructor.name, a.action.type);
             }
         });
@@ -87,14 +95,9 @@ export abstract class FluxModel extends LFModelBase {
         const assignDispatchOfThis = (props: never[]): void => {
             props.filter(p => typeof p === 'function' && isModelDispathableMethod(p)).forEach(p => {
                 const prop = p as DispatchAttribute;
-                prop.dispatch = ((action) => this.dispatch(action)) as Dispatch;
-                if (this.pl !== undefined) {
-                    // FIXME: figure out attach strategy (@see: ../decorators/attach)
-                    this.pl.attach(p as LFModelReducer, prop.action.namespace || this.constructor.name, prop.action.type);
-                }
+                prop.dispatch = (action) => this.dispatch(action);
                 this.attachables.add(prop);
             });
-
         }
 
         assignDispatchOfThis(Object.getOwnPropertyNames(derivedPrototype).map(name => instanceContents[name]));

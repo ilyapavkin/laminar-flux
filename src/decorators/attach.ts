@@ -1,13 +1,11 @@
 import { FluxModel } from 'src/model';
+import { trace } from 'src/utils/trace';
 import { getDefaultPipeline } from '../api';
 import LFPipeline from '../pipeline';
 
 // FIXME: get rid of any
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function attach(toPipeline?: LFPipeline): (f: unknown) => any {
-    // FIXME: configure non-default pipeline
-    const pipeline = toPipeline === undefined ? getDefaultPipeline() : toPipeline;
-
     return (origConstructor: unknown): FluxModel => {
         /* const preserved = origConstructor;
         if (!preserved.prototype.injections) {
@@ -28,7 +26,9 @@ export function attach(toPipeline?: LFPipeline): (f: unknown) => any {
                         })
                         .catch(err => { throw err; });
                 */
-                obj.dispatch = pipeline.dispatch;
+                // FIXME: configure non-default pipeline
+                const pipeline = toPipeline === undefined ? getDefaultPipeline() : toPipeline;
+                trace('attaching model to pipeline');
                 obj.pipeline = pipeline;
                 obj.detach = (): void => {
                     obj.pipeline = null;

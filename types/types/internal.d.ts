@@ -1,5 +1,5 @@
 import { Reducer, Action } from 'typesafe-actions';
-import { AnyObject, Anything } from './common';
+import { PlainObject, Anything } from './common';
 declare type LFStateValueType = any;
 /**
  * Basic redux state object element
@@ -29,5 +29,5 @@ export declare type LFModelReducer<TState extends LFState = LFState, TAction ext
 /**
  * Basic payload type
  */
-export declare type LFPayload = AnyObject;
+export declare type LFPayload = PlainObject;
 export {};
