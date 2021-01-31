@@ -1,7 +1,11 @@
 /* eslint-disable class-methods-use-this */
+import { LaminarFluxModel } from 'src/model/LFModel';
 import Laminate, { FluxModel } from '../../src/model';
-import { attach, reducer /* , effect, saga */ } from '../../src/decorators';
+import { attach, reducer /* , effect */ } from '../../src/decorators';
 import { LFAction, LFState } from '../../src/types/internal';
+
+const testModelNamespace = 'TestModel';
+const testModelStoreReducerActionType = `@@LF:${testModelNamespace}/storeActionReducer`;
 
 @attach()
 class TestModel extends FluxModel {
@@ -20,17 +24,16 @@ class TestModel extends FluxModel {
     async testEffect(action: Action): Promise<LFPayload> {
         return { success: true };
     }
-
-    @saga
-    *testSaga(action: Action): Generator {
-        return { success: true }
-    } */
+    */
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const testModelLaminator = () => new (Laminate(TestModel));
+const testModelLaminator = (): InstanceType<LaminarFluxModel> => new (Laminate(TestModel));
 type TestModelInstance = ReturnType<typeof testModelLaminator>;
 
 export default TestModel;
 export type { TestModelInstance };
 export { testModelLaminator };
+export {
+    testModelNamespace,
+    testModelStoreReducerActionType
+};

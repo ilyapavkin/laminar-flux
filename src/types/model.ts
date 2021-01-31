@@ -2,15 +2,15 @@ import { TypeConstant, PayloadActionCreator } from 'typesafe-actions';
 import { Dispatch } from 'redux';
 
 import { AnyFunction } from './common';
-import { LFReducer, LFPayload, LFAction } from './internal';
+import { LFReducer, LFPayload, LFAction, LFState } from './internal';
 
 /**
  * FluxModel call handler. (not implemented yet)
  */
 // TODO: implement this:
-export type LFCallHandle = {
+/* export type LFCallHandle = {
     cancel: () => void;
-};
+};*/
 
 // export type ModelMethodActionBuilderPayloadCreator = (payload: object[]) => void;
 /* export type ModelMethodActionBuilder = ((
@@ -33,9 +33,9 @@ export type DispatchAttribute = {
 }
 export type ModelDispathableMethod = AnyFunction & DispatchAttribute;
 
-export type ModelSyncEndpoint = LFReducer;
-export type ModelAsyncEndpoint = (action: LFAction) => Promise<LFPayload>;
-export type ModelEndpoint = ModelSyncEndpoint | ModelAsyncEndpoint;
+export type ModelSyncEndpoint<S extends LFState = LFState, A extends LFAction = LFAction> = LFReducer<S, A>;
+export type ModelAsyncEndpoint<A extends LFAction = LFAction> = (action: A) => Promise<LFPayload>;
+export type ModelEndpoint<S extends LFState = LFState, A extends LFAction = LFAction> = ModelSyncEndpoint<S, A> | ModelAsyncEndpoint<A>;
 
 // TODO: implement following:
 /*

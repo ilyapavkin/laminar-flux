@@ -1,10 +1,9 @@
-import { Action } from 'typesafe-actions';
-import { LFReducer } from './internal';
+import { LFAction, LFReducer, LFState } from './internal';
 
-interface RouterHandler<TState, TAction extends Action> {
-    (state: TState, action: TAction): TState;
-    add: (actionType: string, reducer: LFReducer, namespace: string) => void;
-    remove: (reducer: LFReducer, actionType?: string, namespace?: string) => void;
+interface RouterHandler<S extends LFState = LFState, A extends LFAction = LFAction> {
+    (state?: S, action?: A): S;
+    add: (reducer: LFReducer<S, A>, namespace?: string, actionType?: string) => void;
+    remove: (reducer: LFReducer<S, A>, namespace?: string, actionType?: string) => void;
     // onUpdate: () => void
 }
 

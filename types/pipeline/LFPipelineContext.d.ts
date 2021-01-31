@@ -1,14 +1,11 @@
 import { Reducer, Dispatch } from 'redux';
-import { LFAction } from '../types/internal';
-import { LFPipelineSettings } from './LFPipelineSettings';
+import { LFAction, LFState } from '../types/internal';
 export declare const undefinedDispatcher: Dispatch<LFAction>;
-export default class LFPipelineContext<A extends LFAction> {
-    #private;
-    protected router: import("../types/router").RouterHandler<Record<string, unknown>, LFAction<import("../types/common").Anything>>;
+export default class LFPipelineContext<S extends LFState = LFState, A extends LFAction = LFAction> {
+    protected router: import("../types/router").RouterHandler<S, A>;
     protected dispatcher?: Dispatch<A>;
-    protected readonly mainReducer: Reducer;
-    constructor(options?: LFPipelineSettings);
-    get reducer(): Reducer;
+    protected readonly mainReducer: Reducer<S, A>;
+    get reducer(): Reducer<S, A>;
     set dispatch(dispatch: Dispatch<A> | undefined);
     get dispatch(): Dispatch<A> | undefined;
 }

@@ -1,4 +1,4 @@
-import { LFModelReducer, LFAction } from '../types/internal';
+import { LFModelReducer, LFAction, LFState } from '../types/internal';
 import LFPipelineContext from './LFPipelineContext';
 
 /**
@@ -7,13 +7,13 @@ import LFPipelineContext from './LFPipelineContext';
  * Instance of class also provides middleware to attach into redux.
  * @typicalname Pipeline
  */
-class LFPipeline<A extends LFAction = LFAction> extends LFPipelineContext<A> {
-    attach(actionType: string, model: LFModelReducer, namespace: string): void {
-        this.router.add(actionType, model, namespace);
+class LFPipeline<S extends LFState = LFState, A extends LFAction = LFAction> extends LFPipelineContext<S, A> {
+    attach(model: LFModelReducer<S, A>, namespace?: string, actionType?: string): void {
+        this.router.add(model, namespace, actionType);
     }
 
-    remove(model: LFModelReducer, actionType?: string, namespace?: string): void {
-        this.router.remove(model, actionType, namespace);
+    remove(model: LFModelReducer<S, A>, namespace?: string, actionType?: string): void {
+        this.router.remove(model, namespace, actionType);
     }
 }
 

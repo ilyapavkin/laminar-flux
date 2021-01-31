@@ -1,14 +1,14 @@
 import { Reducer, Action } from 'typesafe-actions';
 import { AnyObject, Anything } from './common';
-declare type LFStateValueType = unknown;
-declare type GetAction<TAction extends Action, TType extends TAction['type']> = TAction extends Action<TType> ? TAction : never;
-declare type InitialHandler<TState, TRootAction extends Action> = {
-    [P in TRootAction['type']]?: (state: TState, action: GetAction<TRootAction, P>) => TState;
-};
+declare type LFStateValueType = any;
 /**
- * Basic redux state object
+ * Basic redux state object element
  */
-export declare type LFState = Record<string, LFStateValueType>;
+export declare type LFStateEntry = Record<string, LFStateValueType>;
+/**
+ * Basic redux state storage (element or array)
+ */
+export declare type LFState = LFStateEntry | LFStateEntry[];
 /**
  * Basic action
  * @extends Action from `typesafe-actions`
@@ -25,9 +25,7 @@ export declare type LFReducer<TState extends LFState = LFState, TAction extends 
 /**
  * FluxModel reducer.
  */
-export declare type LFModelReducer = LFReducer & Readonly<{
-    handlers?: InitialHandler<AnyObject, Action>;
-}>;
+export declare type LFModelReducer<TState extends LFState = LFState, TAction extends Action = LFAction> = LFReducer<TState, TAction>;
 /**
  * Basic payload type
  */

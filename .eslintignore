@@ -1,6 +1,7 @@
 **/dist/*
 **/node_modules/*
 babel.config.js
+.babelrc
 jest.config.js
 rollup.config.js
 
@@ -9,5 +10,7 @@ lib/
 cache/
 coverage/
 es/
+types/
 
 *.spec.ts.off
+test/redux/**

@@ -21,12 +21,12 @@
         "lint:fix": "eslint --ext .js,.ts,.d.ts src",
         "types:check": "tsc --noEmit",
         "test": "jest",
-        "test:watch": "yarn test -- --watch",
-        "test:coverage": "yarn test -- --coverage",
+        "test:watch": "yarn test --watch",
+        "test:coverage": "yarn test --coverage",
         "build": "rollup -c",
         "docs": "jsdoc2md --files ./src/*.ts --configure ./jsdoc2md.json > ./docs/readme.md",
-        "pretest": "yarn build",
-        "prepublishOnly": ""
+        "report": "yarn lint && yarn types:check && yarn test:coverage && yarn format:check",
+        "pretest": "yarn build"
     },
     "repository": {
         "type": "git",
@@ -50,7 +50,7 @@
     "devDependencies": {
         "@babel/cli": "^7.11.6",
         "@babel/core": "^7.11.6",
-        "@babel/plugin-proposal-class-properties": "^7.12.1",
+        "@babel/plugin-proposal-class-properties": "^7.10.4",
         "@babel/plugin-proposal-decorators": "^7.10.5",
         "@babel/plugin-proposal-object-rest-spread": "^7.12.1",
         "@babel/plugin-transform-modules-commonjs": "^7.12.1",
@@ -95,9 +95,5 @@
         "react-redux": "^7.2.0",
         "redux": "^4.0.5",
         "typesafe-actions": "^5.1.0"
-    },
-    "jest": {
-        "testRegex": "(/test/.*\\.spec\\.[tj]s)$",
-        "coverageProvider": "v8"
     }
 }

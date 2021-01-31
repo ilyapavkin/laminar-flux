@@ -13,7 +13,7 @@ import {
     LFModelReducer,
     LFPayload,
 } from '../types/internal';
-import { ConstructorArgs, AnyObject, AnyFunction, Constructor } from '../types/common';
+import { ConstructorArgs, PlainObject, AnyFunction, Constructor } from '../types/common';
 import LFPipeline from '../pipeline/LFPipeline';
 
 import { LFModelBase } from './LFModelBase';
@@ -25,7 +25,7 @@ function isModelDispathableMethod(f: AnyFunction): f is ModelDispathableMethod {
     return (f as ModelDispathableMethod).action !== undefined;
 }
 
-type TransformMethods<T extends AnyObject, TCallable, TDecorator> = {
+type TransformMethods<T extends PlainObject, TCallable, TDecorator> = {
     [P in keyof T]: T[P] extends TCallable ? TDecorator : T[P]
 }
 
@@ -65,9 +65,9 @@ export abstract class FluxModel extends LFModelBase {
                 // check if pipeline changed
                 if (pipeline !== this.pl) {
                     // detach from current pipeline;
-                    this.pl.remove(a as never as LFModelReducer, a.action.type, a.action.namespace || this.constructor.name);
+                    this.pl.remove(a as never as LFModelReducer, a.action.namespace || this.constructor.name, a.action.type);
                 }
-                this.pl.attach(a.action.type, a as never as LFModelReducer, a.action.namespace || this.constructor.name);
+                this.pl.attach(a as never as LFModelReducer, a.action.namespace || this.constructor.name, a.action.type);
             }
         });
         this.pl = pipeline === null ? undefined : pipeline;
@@ -90,7 +90,7 @@ export abstract class FluxModel extends LFModelBase {
                 prop.dispatch = ((action) => this.dispatch(action)) as Dispatch;
                 if (this.pl !== undefined) {
                     // FIXME: figure out attach strategy (@see: ../decorators/attach)
-                    this.pl.attach(prop.action.type, p as LFModelReducer, prop.action.namespace || this.constructor.name);
+                    this.pl.attach(p as LFModelReducer, prop.action.namespace || this.constructor.name, prop.action.type);
                 }
                 this.attachables.add(prop);
             });

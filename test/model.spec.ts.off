@@ -36,7 +36,6 @@ store.subscribe(() => {
 describe('model reducer methods tests', () => {
     let instance: TestModelInstance;
     const reducerActionType = '@@LF:TestModel/storeActionReducer';
-    const reducerNamespace = 'TestModel';   // FIXME: add this check
     const header = {
         type: reducerActionType,
         // namespace: reducerNamespace
