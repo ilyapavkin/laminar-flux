@@ -10,7 +10,8 @@ export * from './api';
 
 export {
     attach,
-    reducer
+    reducer,
+    rdcr
 } from './decorators';
 
 export {
@@ -23,5 +24,6 @@ export {
 } from './model'
 
 export type {
-    LFState as State
+    LFState as State,
+    LFAction as Action
 } from './types/internal';

@@ -4,7 +4,7 @@ export type PlainObject = Record<string, unknown>;
 export type PlainObjectOrArray = PlainObject | PlainObject[];
 export type AnyConstructor = Constructor<PlainObject>;
 export type AnyFunction = (...args: Array<unknown>) => unknown | void;
-export type Anything = PlainObject | string | number | bigint | boolean | symbol | undefined | null;
+export type Anything = PlainObject | string | number | bigint | boolean | symbol | undefined;
 
 export function isPlainObject(obj: any): boolean {
     if (typeof obj !== 'object' || obj === null) return false

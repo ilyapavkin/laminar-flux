@@ -1,24 +1,38 @@
 // Model implementation of TODOS reducer
 
 /* eslint-disable class-methods-use-this */
-import { LaminarFluxModel } from '../../src/model/LFModel';
-import { Laminate, FluxModel, attach, reducer /* , effect */ } from '../..';
-import { LFAction, LFState } from '../../src/types/internal';
+import { Laminate, State, Action, FluxModel, attach, reducer, rdcr /* , effect */ } from '../..';
 
 // FIXME: should be part of FluxModelCtl
 const todosModelNamespace = 'TodosModel';
 const todosModelStoreReducerActionType = `@@LF:${todosModelNamespace}/storeActionReducer`;
 
+function id(state: { id: number }[]) {
+    return (
+        state.reduce((result, item) => (item.id > result ? item.id : result), 0) + 1
+    )
+}
+
+
 @attach()
 class TodosModel extends FluxModel {
     @reducer
-    storeActionReducer(state: LFState, action: LFAction): LFState {
+    storeActionReducer(state: State, action: Action): State {
         return { ...state, storeActionReducer: action.payload };
     }
 
     @reducer
-    addOne(state: LFState, action: LFAction): LFState {
-        return { ...state, addOne: action.payload ? action.payload as number + 1 : 0 };
+    add(state: State = [], action: Action<{
+        id: number,
+        text: string
+    }>): State {
+        return [
+            ...state,
+            {
+                id: id(state as { id: number }[]),
+                text: action.payload?.text
+            }
+        ];
     }
 
 

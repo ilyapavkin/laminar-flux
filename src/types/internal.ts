@@ -1,3 +1,4 @@
+import { AnyAction } from 'redux';
 import { Reducer, Action } from 'typesafe-actions';
 import { PlainObject, Anything } from './common';
 
@@ -15,16 +16,20 @@ export type LFStateEntry = Record<string, LFStateValueType>;
 /**
  * Basic redux state storage (element or array)
  */
-export type LFState = LFStateEntry | LFStateEntry[];
+// export type LFState = LFStateEntry | LFStateEntry[];
+export type LFState = any;
 /**
  * Basic action
  * @extends Action from `typesafe-actions`
  * @property {string} type - type of action, *derived from `Action`*
  * @property {object} payload - payload of action
  */
-export type LFAction<TData extends Anything = Anything> = Action & {
+export interface LFAction<TData extends Anything = Anything> extends Action {
     payload?: TData;
-};
+}
+/*export type LFAction<TData extends Anything = Anything> = Action & {
+    payload?: TData;
+};*/
 /**
  * Basic reducer. Comply to `Reducer` from `typesafe-actions`.
  */
@@ -37,4 +42,4 @@ export type LFModelReducer<TState extends LFState = LFState, TAction extends Act
 /**
  * Basic payload type
  */
-export type LFPayload = PlainObject;
+export type LFPayload = Anything;

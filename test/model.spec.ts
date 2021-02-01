@@ -1,12 +1,16 @@
 import configureMockStore from 'redux-mock-store';
 import { TodosModelInstance, todosModelLaminator } from './models/todos';
 import { createStore, FluxModelCtl, getDefaultPipeline, dropPipeline } from '..';
-import { armPromise } from './helpers/armPromise';
 
-
-
-
-// const middlewares = [];
+import {
+    addTodo,
+    dispatchInMiddle,
+    getStateInMiddle,
+    subscribeInMiddle,
+    unsubscribeInMiddle,
+    throwError,
+    unknownAction
+} from './redux/test/helpers/actionCreators'
 
 describe('model reducer methods tests', () => {
     let instance: TodosModelInstance;
@@ -67,6 +71,96 @@ describe('model reducer methods tests', () => {
             TodosModel: {
                 storeActionReducer: payload
             }
+        });
+    });
+
+    it('applies the reducer to the previous state', () => {
+        const store = createStore();
+        instance = todosModelLaminator();
+
+        expect(store.getState()).toEqual({
+            // TodosModel: []
+        });
+
+        store.dispatch(unknownAction());
+        expect(store.getState()).toEqual({
+            // TodosModel: []
+        });
+
+        instance.add({
+            text: 'Hello'
+        });
+        expect(store.getState()).toEqual({
+            TodosModel: [
+                {
+                    id: 1,
+                    text: 'Hello'
+                }
+            ]
+        });
+
+        instance.add({
+            text: 'World'
+        });
+        expect(store.getState()).toEqual({
+            TodosModel: [
+                {
+                    id: 1,
+                    text: 'Hello'
+                },
+                {
+                    id: 2,
+                    text: 'World'
+                }
+            ]
+        });
+    })
+
+    it('applies the reducer to the initial state', () => {
+        const store = createStore(undefined, {
+            TodosModel: [
+                {
+                    id: 1,
+                    text: 'Hello'
+                }
+            ]
+        });
+        instance = todosModelLaminator();
+
+        expect(store.getState()).toEqual({
+            TodosModel: [
+                {
+                    id: 1,
+                    text: 'Hello'
+                }
+            ]
+        });
+
+        store.dispatch(unknownAction())
+        expect(store.getState()).toEqual({
+            TodosModel:
+                [
+                    {
+                        id: 1,
+                        text: 'Hello'
+                    }
+                ]
+        });
+
+        instance.add({
+            text: 'World'
+        });
+        expect(store.getState()).toEqual({
+            TodosModel: [
+                {
+                    id: 1,
+                    text: 'Hello'
+                },
+                {
+                    id: 2,
+                    text: 'World'
+                }
+            ]
         });
     });
 
