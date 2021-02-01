@@ -9,11 +9,13 @@ export declare type ModelMethodDecorationExtension = PayloadActionCreator<TypeCo
     type: TypeConstant;
     namespace?: string;
 };
-export declare type DispatchAttribute = {
-    action: ModelMethodDecorationExtension;
+export declare type ModelMethodDispatchAttribute = {
     dispatch?: Dispatch;
 };
-export declare type ModelDispathableMethod = AnyFunction & DispatchAttribute;
+export declare type ModelMethodActionAttribute = {
+    action: ModelMethodDecorationExtension;
+};
+export declare type ModelDispathableMethod = AnyFunction & ModelMethodDispatchAttribute & ModelMethodActionAttribute;
 export declare type ModelSyncEndpoint<S extends LFState = LFState, A extends LFAction = LFAction> = LFReducer<S, A>;
 export declare type ModelAsyncEndpoint<A extends LFAction = LFAction> = (action: A) => Promise<LFPayload>;
 export declare type ModelEndpoint<S extends LFState = LFState, A extends LFAction = LFAction> = ModelSyncEndpoint<S, A> | ModelAsyncEndpoint<A>;

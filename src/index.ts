@@ -11,7 +11,7 @@ export * from './api';
 export {
     attach,
     reducer,
-    rdcr
+    effect
 } from './decorators';
 
 export {

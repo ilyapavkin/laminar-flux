@@ -1,6 +1,6 @@
 {
     "name": "laminar-flux",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "Flux model",
     "main": "lib/laminar-flux.js",
     "unpkg": "dist/laminar-flux.js",
@@ -25,6 +25,7 @@
         "test:debug": "yarn test --collectCoverage=false --reporters jest-silent-reporter",
         "test:coverage": "yarn test --coverage",
         "build": "rollup -c",
+        "build:clean": "yarn types:check && yarn clean && yarn build",
         "docs": "jsdoc2md --files ./src/*.ts --configure ./jsdoc2md.json > ./docs/readme.md",
         "report": "yarn lint && yarn types:check && yarn test:coverage && yarn format:check",
         "pretest": "yarn build"

@@ -164,5 +164,12 @@ describe('model reducer methods tests', () => {
         });
     });
 
-    // TODO: MORE TESTS!
+    /* it('should fire effect', async () => {
+        const store = createStore();
+        instance = todosModelLaminator();
+
+        expect(store.getState()).toEqual({});
+
+        instance.testEffect({ test: 'check' });
+    });*/
 });

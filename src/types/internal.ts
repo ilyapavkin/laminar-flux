@@ -1,23 +1,25 @@
 import { AnyAction } from 'redux';
 import { Reducer, Action } from 'typesafe-actions';
-import { PlainObject, Anything } from './common';
+import { PlainObject, Anything, AnyPrimitive } from './common';
 
 type LFStateValueType = any;
+/**
+ * Basic redux state storage (element or array)
+ */
+export type LFState<TState extends LFStateValueType = LFStateValueType> = TState;
+
+/**
+ * A message is a extension over *redux* `Action`. 
+ */
+export interface LFMessage<TPayload extends AnyPrimitive = AnyPrimitive> extends Action {
+    payload?: TPayload;
+}
 
 /*type GetAction<TAction extends Action, TType extends TAction['type']> = TAction extends Action<TType> ? TAction : never;
 type InitialHandler<TState, TRootAction extends Action> = {
     [P in TRootAction['type']]?: (state: TState, action: GetAction<TRootAction, P>) => TState;
 };*/
 
-/**
- * Basic redux state object element
- */
-export type LFStateEntry = Record<string, LFStateValueType>;
-/**
- * Basic redux state storage (element or array)
- */
-// export type LFState = LFStateEntry | LFStateEntry[];
-export type LFState = any;
 /**
  * Basic action
  * @extends Action from `typesafe-actions`
@@ -27,9 +29,8 @@ export type LFState = any;
 export interface LFAction<TData extends Anything = Anything> extends Action {
     payload?: TData;
 }
-/*export type LFAction<TData extends Anything = Anything> = Action & {
-    payload?: TData;
-};*/
+// export type LFAction<TData extends Anything = Anything> = Action & Omit<TData, 'type'>;
+
 /**
  * Basic reducer. Comply to `Reducer` from `typesafe-actions`.
  */

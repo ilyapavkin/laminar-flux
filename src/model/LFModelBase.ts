@@ -4,7 +4,7 @@ import { LFModelReducer } from '../types/internal';
 export abstract class LFModelBase {
     #reducer = createReducer({});
 
-    protected get reducer(): LFModelReducer {
+    private get reducer(): LFModelReducer {
         return this.#reducer;
     }
 };

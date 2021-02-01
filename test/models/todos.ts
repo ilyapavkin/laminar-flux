@@ -1,7 +1,7 @@
 // Model implementation of TODOS reducer
 
 /* eslint-disable class-methods-use-this */
-import { Laminate, State, Action, FluxModel, attach, reducer, rdcr /* , effect */ } from '../..';
+import { Laminate, State, Action, FluxModel, attach, reducer, effect } from '../..';
 
 // FIXME: should be part of FluxModelCtl
 const todosModelNamespace = 'TodosModel';
@@ -16,16 +16,16 @@ function id(state: { id: number }[]) {
 
 @attach()
 class TodosModel extends FluxModel {
-    @reducer
+    @reducer()
     storeActionReducer(state: State, action: Action): State {
         return { ...state, storeActionReducer: action.payload };
     }
 
-    @reducer
-    add(state: State = [], action: Action<{
-        id: number,
-        text: string
-    }>): State {
+    @reducer()
+    add(
+        state: State<{ id: number, text: string }[]> = [],
+        action: Action<{ text: string }>
+    ): State {
         return [
             ...state,
             {
@@ -35,12 +35,13 @@ class TodosModel extends FluxModel {
         ];
     }
 
-
-    /* @effect
-    async testEffect(action: Action): Promise<LFPayload> {
-        return { success: true };
+    @effect
+    async testEffect(action: Action): Promise<Action> {
+        return {
+            type: 'test'
+        };
     }
-    */
+
 }
 
 

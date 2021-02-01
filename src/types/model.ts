@@ -27,11 +27,15 @@ export type ModelMethodDecorationExtension = PayloadActionCreator<TypeConstant, 
     action: ModelMethodActionBuilder;                   // get raw action without dispatching
 }*/
 
-export type DispatchAttribute = {
-    action: ModelMethodDecorationExtension; // get raw action without dispatching
+export type ModelMethodDispatchAttribute = {
     dispatch?: Dispatch;                    // on runtime dispatch will be assigned
-}
-export type ModelDispathableMethod = AnyFunction & DispatchAttribute;
+};
+
+export type ModelMethodActionAttribute = {
+    action: ModelMethodDecorationExtension; // get raw action without dispatching
+};
+
+export type ModelDispathableMethod = AnyFunction & ModelMethodDispatchAttribute & ModelMethodActionAttribute;
 
 export type ModelSyncEndpoint<S extends LFState = LFState, A extends LFAction = LFAction> = LFReducer<S, A>;
 export type ModelAsyncEndpoint<A extends LFAction = LFAction> = (action: A) => Promise<LFPayload>;

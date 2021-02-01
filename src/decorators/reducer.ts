@@ -1,66 +1,61 @@
-import { Anything } from 'src/types/common';
-import { trace } from 'src/utils/trace';
+import { AnyPrimitive } from '../types/common';
 import { LFState, LFAction, LFPayload } from '../types/internal';
-import { DispatchAttribute } from '../types/model';
+import { ModelMethodActionAttribute, ModelMethodDispatchAttribute } from '../types/model';
 
-type AutoReducerEP<TFunc extends (state: LFState, action: LFAction) => LFState> = TFunc extends (state: LFState, action: LFAction) => infer LFAction ? LFAction : never;
+export type GenericModelReducerEndpoint<
+    // TState extends LFState = LFState,
+    // TData extends AnyPrimitive = AnyPrimitive,
+    TState,
+    TData,
+    TFunc extends (state: TState, action: LFAction<TData>) => TState
+    > = TFunc;
 
-type GenericModelReducerEndpoint<TData extends Anything = Anything> = (state: LFState, action: LFAction<TData>) => LFState;
+type ModelReducer = ModelMethodDispatchAttribute & ModelMethodActionAttribute;
 
-export type ModelReducerEndpoint = (state: LFState, action: LFAction<any>) => LFState;
-
-export interface ModelReducerDecorator extends DispatchAttribute {
-    (payload: LFPayload): LFState;             // dispatch message with payload
+// FIXME: clean this up
+// export type ModelReducerEndpoint<TState extends LFState = LFState, TData = LFPayload> = (state: TState, action: LFAction<TData>) => TState;
+export type ModelReducerEndpoint<TState extends LFState = LFState, TData = LFPayload> = (state: TState, action: LFAction<TData>) => TState;
+export interface ModelReducerDecorator<TState extends LFState = LFState, TData = LFPayload> extends ModelReducer {
+    (payload: TData): TState;             // dispatch message with payload
 }
 
-export function rdcr() {
+export function reducer<TState extends LFState = LFState, TData extends AnyPrimitive = AnyPrimitive>() {
     return <
         TKey extends string,
         TTarget extends {
-            [K in TKey]: GenericModelReducerEndpoint;
+            [K in TKey]: GenericModelReducerEndpoint<TState, TData, TTarget[K]>;
         }
     >(target: TTarget, propertyName: TKey, descriptor: PropertyDescriptor): void => {
-
-    }
-}
-
-export function reducer<
-    TKey extends string,
-    TTarget extends { [K in TKey]: ModelReducerEndpoint }
->(target: TTarget, propertyName: TKey, descriptor: PropertyDescriptor): void {
-    const namespace = `${target.constructor.name}`;
-    const type = `@@LF:${namespace}/${propertyName}`;
-    const wrapped = target[propertyName];
-    const executor = (payloadContents: LFPayload, ...args: []): LFState | undefined => {
-        trace('executor called');
-        const self = executor as ModelReducerDecorator;
-        if (args.length === 0) {
-            if (!self.dispatch) {
-                throw new Error(`Dispatcher not available for method [${propertyName}]`);
+        const namespace = `${target.constructor.name}`;
+        const type = `@@LF:${namespace}/${propertyName}`;
+        const wrapped = target[propertyName];
+        const executor = (payloadContents: TData, ...args: []): TState | undefined => {
+            const self = executor as ModelReducerDecorator<TState, TData>;
+            // FIXME: vague detection of external call
+            if (args.length === 0) {
+                if (!self.dispatch) {
+                    throw new Error(`Dispatcher not available for method [${propertyName}]`);
+                }
+                self.dispatch(self.action(payloadContents))
+                // FIXME: undefined should be replaced with something related to external call
+                return undefined;
             }
-            trace('dispatching!');
-            trace(self.dispatch(self.action(payloadContents)));
-            return undefined;
-        }
 
-        const action = (args as unknown[])[0] as LFAction;
-        if (action.type && action.type === type) {
-            return wrapped(payloadContents as LFState, action);
-        }
+            const action = (args as unknown[])[0] as LFAction;
+            if (action.type && action.type === type) {
+                return wrapped(payloadContents as LFState, action);
+            }
 
-        return payloadContents as LFState;
-    };
+            return payloadContents as LFState;
+        };
 
-    Object.defineProperties(executor, {
-        'name': { value: propertyName },
-        'action': {
-            value: Object.assign((payload: LFPayload) => {
-                return { type, payload };
-            }, { type, namespace })
-        }
-    });
+        Object.defineProperties(executor, {
+            name: { value: propertyName },
+            action: {
+                value: Object.assign((payload: LFPayload) => ({ type, payload }), { type, namespace })
+            }
+        });
 
-    // Decorator specific
-    // eslint-disable-next-line no-param-reassign
-    descriptor.value = executor;
+        Object.assign(descriptor, { value: executor });
+    }
 }

@@ -1,14 +1,16 @@
 import { Reducer, Action } from 'typesafe-actions';
-import { Anything } from './common';
+import { Anything, AnyPrimitive } from './common';
 declare type LFStateValueType = any;
-/**
- * Basic redux state object element
- */
-export declare type LFStateEntry = Record<string, LFStateValueType>;
 /**
  * Basic redux state storage (element or array)
  */
-export declare type LFState = any;
+export declare type LFState<TState extends LFStateValueType = LFStateValueType> = TState;
+/**
+ * A message is a extension over *redux* `Action`.
+ */
+export interface LFMessage<TPayload extends AnyPrimitive = AnyPrimitive> extends Action {
+    payload?: TPayload;
+}
 /**
  * Basic action
  * @extends Action from `typesafe-actions`

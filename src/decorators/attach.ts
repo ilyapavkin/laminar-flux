@@ -7,11 +7,6 @@ import LFPipeline from '../pipeline';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function attach(toPipeline?: LFPipeline): (f: unknown) => any {
     return (origConstructor: unknown): FluxModel => {
-        /* const preserved = origConstructor;
-        if (!preserved.prototype.injections) {
-            preserved.prototype.injections = [];
-        }*/
-
         const proxyHandler = {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             construct(target: any, args: any[], newTarget: any): any {

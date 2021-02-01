@@ -4,21 +4,22 @@
  */
 
 import { Dispatch } from 'redux';
-import { trace } from 'src/utils/trace';
 import {
     ModelDispathableMethod,
-    DispatchAttribute
+    ModelMethodDispatchAttribute,
+    ModelMethodActionAttribute
 } from '../types/model';
 import {
     LFAction,
     LFModelReducer,
     LFPayload,
+    LFState,
 } from '../types/internal';
-import { ConstructorArgs, PlainObject, AnyFunction, Constructor } from '../types/common';
+import { ConstructorArgs, PlainObject, AnyFunction, Constructor, AnyPrimitive } from '../types/common';
 import LFPipeline from '../pipeline/LFPipeline';
 
 import { LFModelBase } from './LFModelBase';
-import { ModelReducerEndpoint, ModelReducerDecorator } from '../decorators/reducer';
+import { ModelReducerEndpoint, GenericModelReducerEndpoint, ModelReducerDecorator } from '../decorators/reducer';
 import { ModelEffectEndpoint } from '../decorators/effect';
 
 
@@ -30,30 +31,40 @@ type TransformMethods<T extends PlainObject, TCallable, TDecorator> = {
     [P in keyof T]: T[P] extends TCallable ? TDecorator : T[P]
 }
 
+type Dispatchable = ModelMethodDispatchAttribute & ModelMethodActionAttribute;
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type LaminatorConstructor = Constructor<any>;
-export type LaminarFluxModel = TransformModel<LaminatorConstructor>;
 
-type TransformModel<T extends LaminatorConstructor> = {
+/* GenericModelReducerEndpoint<
+    TState,
+    TData,
+    TFunc extends (state: TState, action: LFAction<TData>) => TState
+    > = TFunc;*/
+type ModelReducer<TState, TData> = (state: TState, action: LFAction<TData>) => TState;
+
+type TransformModel<T extends LaminatorConstructor, TState extends LFState = LFState, TData extends AnyPrimitive = AnyPrimitive, TKey extends keyof T = keyof T> = {
     [K in keyof T]: T[K]
 } & {
-    new(...args: ConstructorArgs<T>): TransformMethods<InstanceType<T>, ModelReducerEndpoint, ModelReducerDecorator>
-        & TransformMethods<InstanceType<T>, ModelEffectEndpoint, (payload: LFPayload) => unknown> // FIXME: promise? call handler?
+    // FIXME: this grabs more methods that it should
+    new(...args: ConstructorArgs<T>): TransformMethods<InstanceType<T>, (state: any, action: any) => any, ModelReducerDecorator>
+    // & TransformMethods<InstanceType<T>, ModelEffectEndpoint, (payload: LFPayload) => void> // FIXME: promise? call handler?
     // & TransformMethods<InstanceType<T>, ModelSagaEndpoint, (payload: LFPayload) => LFCallHandle> // FIXME: implement saga
     // FIXME: figure out how to implement plugin system here.
     // Idea - additional decorators should somehow mutate this type
 }
+
+export type LaminarFluxModel = TransformModel<LaminatorConstructor>;
 
 /**
  * Main model class.
  */
 export abstract class FluxModel extends LFModelBase {
     protected dispatch: Dispatch<LFAction> = (action) => {
-        trace('inside default dispatch');
+
         // FIXME: this should rely on pipeline without checks
         if (this.pl?.dispatch !== undefined) {
-            trace('calling dispatcher');
             return this.pl.dispatch(action);
         }
         // FIXME: add metadata here:
@@ -61,20 +72,16 @@ export abstract class FluxModel extends LFModelBase {
     }
 
     protected set pipeline(pipeline: LFPipeline | null) {
-        trace('updating pipeline of model');
         if (pipeline !== null) {
-            trace('pipeline set');
             this.pl = pipeline;
         }
         this.attachables.forEach(a => {
             if (this.pl) {
                 // check if pipeline changed
                 if (pipeline !== this.pl) {
-                    trace('detaching from old pipeline');
                     // detach from current pipeline;
                     this.pl.remove(a as never as LFModelReducer, a.action.namespace || this.constructor.name, a.action.type);
                 }
-                trace('attaching to new pipeline', a.action.type);
                 this.pl.attach(a as never as LFModelReducer, a.action.namespace || this.constructor.name, a.action.type);
             }
         });
@@ -83,7 +90,7 @@ export abstract class FluxModel extends LFModelBase {
 
     private pl?: LFPipeline;
 
-    private attachables: Set<DispatchAttribute> = new Set();
+    private attachables: Set<Dispatchable> = new Set();
 
     constructor() {
         super();
@@ -94,7 +101,7 @@ export abstract class FluxModel extends LFModelBase {
 
         const assignDispatchOfThis = (props: never[]): void => {
             props.filter(p => typeof p === 'function' && isModelDispathableMethod(p)).forEach(p => {
-                const prop = p as DispatchAttribute;
+                const prop = p as Dispatchable;
                 prop.dispatch = (action) => this.dispatch(action);
                 this.attachables.add(prop);
             });

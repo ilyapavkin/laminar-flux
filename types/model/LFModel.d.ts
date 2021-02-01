@@ -3,22 +3,21 @@
  *
  */
 import { Dispatch } from 'redux';
-import { LFAction, LFPayload } from '../types/internal';
-import { ConstructorArgs, PlainObject, Constructor } from '../types/common';
+import { LFAction, LFState } from '../types/internal';
+import { ConstructorArgs, PlainObject, Constructor, AnyPrimitive } from '../types/common';
 import LFPipeline from '../pipeline/LFPipeline';
 import { LFModelBase } from './LFModelBase';
-import { ModelReducerEndpoint, ModelReducerDecorator } from '../decorators/reducer';
-import { ModelEffectEndpoint } from '../decorators/effect';
+import { ModelReducerDecorator } from '../decorators/reducer';
 declare type TransformMethods<T extends PlainObject, TCallable, TDecorator> = {
     [P in keyof T]: T[P] extends TCallable ? TDecorator : T[P];
 };
 declare type LaminatorConstructor = Constructor<any>;
-export declare type LaminarFluxModel = TransformModel<LaminatorConstructor>;
-declare type TransformModel<T extends LaminatorConstructor> = {
+declare type TransformModel<T extends LaminatorConstructor, TState extends LFState = LFState, TData extends AnyPrimitive = AnyPrimitive, TKey extends keyof T = keyof T> = {
     [K in keyof T]: T[K];
 } & {
-    new (...args: ConstructorArgs<T>): TransformMethods<InstanceType<T>, ModelReducerEndpoint, ModelReducerDecorator> & TransformMethods<InstanceType<T>, ModelEffectEndpoint, (payload: LFPayload) => unknown>;
+    new (...args: ConstructorArgs<T>): TransformMethods<InstanceType<T>, (state: any, action: any) => any, ModelReducerDecorator>;
 };
+export declare type LaminarFluxModel = TransformModel<LaminatorConstructor>;
 /**
  * Main model class.
  */
@@ -34,5 +33,5 @@ export declare abstract class FluxModel extends LFModelBase {
  * @param {M} definition
  * @return {*}
  */
-declare const Laminate: <M extends Constructor<any>>(definition: M) => TransformModel<M>;
+declare const Laminate: <M extends Constructor<any>>(definition: M) => TransformModel<M, any, import("../types/common").TypeMapArray<string | number | symbol, import("../types/common").Primitive>, keyof M>;
 export default Laminate;

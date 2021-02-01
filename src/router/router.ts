@@ -4,7 +4,7 @@ import { trace } from 'src/utils/trace';
 import { PlainObject, isPlainObject } from '../types/common';
 import { RouterHandler } from '../types/router';
 import { ModelEndpoint, ModelSyncEndpoint } from '../types/model';
-import { LFStateEntry, LFState, LFAction, LFModelReducer, LFReducer } from '../types/internal';
+import { LFState, LFAction, LFModelReducer, LFReducer } from '../types/internal';
 
 type LFModelReducerMapping<S extends LFState = LFState, A extends LFAction = LFAction> = {
     endpoint: ModelEndpoint<S, A>,
