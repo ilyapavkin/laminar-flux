@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { LFAction } from 'src/types/internal';
+import { LFAction } from '../types/internal';
 import ActionTypes from './actionTypes';
 
 export function checkReducerValid<S, A extends LFAction>(reducer: Reducer<S, A>, key?: string): S {

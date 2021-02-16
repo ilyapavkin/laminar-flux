@@ -1,5 +1,5 @@
-import { Anything } from 'src/types/common';
 import { StoreEnhancer } from 'redux';
+import { Anything } from '../../src/types/common';
 
 type StoreContentsOptions = {
     global?: Anything;

@@ -1,6 +1,6 @@
-import { checkReducerValid } from 'src/utils/validation';
-import { warning } from 'src/utils/warning';
-import { trace } from 'src/utils/trace';
+import { checkReducerValid } from '../utils/validation';
+import { warning } from '../utils/warning';
+import { trace } from '../utils/trace';
 import { PlainObject, isPlainObject } from '../types/common';
 import { RouterHandler } from '../types/router';
 import { ModelEndpoint, ModelSyncEndpoint } from '../types/model';

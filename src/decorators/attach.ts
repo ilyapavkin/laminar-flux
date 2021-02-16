@@ -1,5 +1,5 @@
-import { FluxModel } from 'src/model';
-import { trace } from 'src/utils/trace';
+import { FluxModel } from '../model';
+import { trace } from '../utils/trace';
 import { getDefaultPipeline } from '../api';
 import LFPipeline from '../pipeline';
 

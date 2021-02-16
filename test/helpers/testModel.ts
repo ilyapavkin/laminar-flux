@@ -1,5 +1,4 @@
 /* eslint-disable class-methods-use-this */
-import { LaminarFluxModel } from 'src/model/LFModel';
 import Laminate, { FluxModel } from '../../src/model';
 import { attach, reducer /* , effect */ } from '../../src/decorators';
 import { LFAction, LFState } from '../../src/types/internal';

@@ -1,8 +1,8 @@
 /* eslint-disable import/export */                  // multiple default exports handy here.
 /* eslint-disable @typescript-eslint/ban-types */   // mimic `redux` package
 
-import LFPipeline from 'src/pipeline/LFPipeline';
 import { Store, StoreEnhancer, PreloadedState, createStore as createStoreProxy } from 'redux';
+import LFPipeline from '../pipeline/LFPipeline';
 import { LFReducer, LFAction, LFState } from '../types/internal';
 import setDefaultPipeline from './setDefaultPipeline';
 

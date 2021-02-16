@@ -2,7 +2,7 @@
     "name": "laminar-flux",
     "version": "0.2.1",
     "description": "Flux model",
-    "main": "lib/laminar-flux.js",
+    "main": "src/index.ts",
     "unpkg": "dist/laminar-flux.js",
     "module": "es/laminar-flux.js",
     "types": "./types",
@@ -28,8 +28,7 @@
         "build:clean": "yarn types:check && yarn clean && yarn build",
         "docs": "jsdoc2md --files ./src/*.ts --configure ./jsdoc2md.json > ./docs/readme.md",
         "report": "yarn lint && yarn types:check && yarn test:coverage && yarn format:check",
-        "pretest": "yarn build",
-        "postinstall": "yarn install && yarn build"
+        "pretest": "yarn build"
     },
     "repository": {
         "type": "git",
