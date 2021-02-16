@@ -29,7 +29,7 @@
         "docs": "jsdoc2md --files ./src/*.ts --configure ./jsdoc2md.json > ./docs/readme.md",
         "report": "yarn lint && yarn types:check && yarn test:coverage && yarn format:check",
         "pretest": "yarn build",
-        "postinstall": "yarn build"
+        "postinstall": "yarn install && yarn build"
     },
     "repository": {
         "type": "git",
