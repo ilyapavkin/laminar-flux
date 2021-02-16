@@ -109,7 +109,6 @@ export default function createStore<
     const defaultPipeline = new LFPipeline<S, A>();
     // If user defines reducer - plug laminar after it.
     if (reducer !== undefined) {
-
         defaultPipeline.attach(reducer);
     }
 

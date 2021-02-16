@@ -14,7 +14,7 @@ function id(state: { id: number }[]) {
 }
 
 
-@attach()
+@attach('TodosModel')
 class TodosModel extends FluxModel {
     @reducer()
     storeActionReducer(state: State, action: Action): State {

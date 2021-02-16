@@ -1,6 +1,6 @@
 {
     "name": "laminar-flux",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "Flux model",
     "main": "lib/laminar-flux.js",
     "unpkg": "dist/laminar-flux.js",

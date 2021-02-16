@@ -14,10 +14,12 @@ import {
 
 describe('model reducer methods tests', () => {
     let instance: TodosModelInstance;
-    const reducerActionType = '@@LF:TodosModel/storeActionReducer';
+    const reducerActionNamespacePart = 'TodosModel';
+    const reducerActionTypePart = 'storeActionReducer';
+    const reducerActionType = `@@LF:${reducerActionNamespacePart}/${reducerActionTypePart}`;
     const header = {
         type: reducerActionType,
-        // namespace: reducerNamespace
+        // namespace: reducerActionNamespacePart
     }
 
     beforeEach(() => {
@@ -34,7 +36,7 @@ describe('model reducer methods tests', () => {
 
     test('Reducer method action type', () => {
         instance = todosModelLaminator();
-        expect(instance.storeActionReducer.action.type).toBe(reducerActionType);
+        expect(instance.storeActionReducer.action.type).toBe(reducerActionTypePart);
     });
 
     test('Reducer method action generated', () => {

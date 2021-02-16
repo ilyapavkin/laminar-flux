@@ -24,7 +24,9 @@ export declare type LaminarFluxModel = TransformModel<LaminatorConstructor>;
 export declare abstract class FluxModel extends LFModelBase {
     protected dispatch: Dispatch<LFAction>;
     protected set pipeline(pipeline: LFPipeline | null);
+    protected set namespace(namespace: string | undefined);
     private pl?;
+    private ns?;
     private attachables;
     constructor();
 }

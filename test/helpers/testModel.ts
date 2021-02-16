@@ -7,15 +7,14 @@ import { LFAction, LFState } from '../../src/types/internal';
 const testModelNamespace = 'TestModel';
 const testModelStoreReducerActionType = `@@LF:${testModelNamespace}/storeActionReducer`;
 
-@attach()
+@attach('Todos')
 class Todos extends FluxModel {
-    @reducer
+    @reducer()
     storeActionReducer(state: LFState, action: LFAction): LFState {
-        console.log('reducing');
         return { ...state, storeActionReducer: action.payload };
     }
 
-    @reducer
+    @reducer()
     addOne(state: LFState, action: LFAction): LFState {
         return { ...state, addOne: action.payload ? action.payload as number + 1 : 0 };
     }

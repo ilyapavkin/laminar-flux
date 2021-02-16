@@ -26,8 +26,8 @@ export function reducer<TState extends LFState = LFState, TData extends AnyPrimi
             [K in TKey]: GenericModelReducerEndpoint<TState, TData, TTarget[K]>;
         }
     >(target: TTarget, propertyName: TKey, descriptor: PropertyDescriptor): void => {
-        const namespace = `${target.constructor.name}`;
-        const type = `@@LF:${namespace}/${propertyName}`;
+        const model = target.constructor as any;
+        let type: string;
         const wrapped = target[propertyName];
         const executor = (payloadContents: TData, ...args: []): TState | undefined => {
             const self = executor as ModelReducerDecorator<TState, TData>;
@@ -41,6 +41,15 @@ export function reducer<TState extends LFState = LFState, TData extends AnyPrimi
                 return undefined;
             }
 
+            if (self.action.namespace === undefined || typeof self.action.namespace !== 'string' || !self.action.namespace) {
+                throw new Error('namespace is undefined');
+            }
+
+            // due to @attach called after @reducer namespace is undefined in upper scope, but should be present in runtime
+            if (type === undefined) {
+                type = `@@LF:${self.action.namespace}/${propertyName}`;
+            }
+
             const action = (args as unknown[])[0] as LFAction;
             if (action.type && action.type === type) {
                 return wrapped(payloadContents as LFState, action);
@@ -52,7 +61,10 @@ export function reducer<TState extends LFState = LFState, TData extends AnyPrimi
         Object.defineProperties(executor, {
             name: { value: propertyName },
             action: {
-                value: Object.assign((payload: LFPayload) => ({ type, payload }), { type, namespace })
+                value: Object.assign((payload: LFPayload) => {
+                    const ns = (executor as ModelReducerDecorator<TState, TData>).action.namespace;
+                    return { type: type || ns !== undefined ? `@@LF:${ns}/${propertyName}` : propertyName, payload };
+                }, { type: propertyName })
             }
         });
 

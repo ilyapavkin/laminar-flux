@@ -77,18 +77,27 @@ export abstract class FluxModel extends LFModelBase {
         }
         this.attachables.forEach(a => {
             if (this.pl) {
+                const type = this.ns ? `@@LF:${this.ns}/${a.action.type}` : a.action.type;
+                // eslint-disable-next-line no-param-reassign
+                a.action.namespace = this.ns;
                 // check if pipeline changed
                 if (pipeline !== this.pl) {
                     // detach from current pipeline;
-                    this.pl.remove(a as never as LFModelReducer, a.action.namespace || this.constructor.name, a.action.type);
+                    this.pl.remove(a as never as LFModelReducer, this.ns, type);
                 }
-                this.pl.attach(a as never as LFModelReducer, a.action.namespace || this.constructor.name, a.action.type);
+                this.pl.attach(a as never as LFModelReducer, this.ns, type);
             }
         });
         this.pl = pipeline === null ? undefined : pipeline;
     }
 
+    protected set namespace(namespace: string | undefined) {
+        this.ns = namespace;
+    }
+
     private pl?: LFPipeline;
+
+    private ns?: string;
 
     private attachables: Set<Dispatchable> = new Set();
 

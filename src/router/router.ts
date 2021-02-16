@@ -192,7 +192,7 @@ const LFRouter = <S extends LFState = LFState, A extends LFAction = LFAction>():
             });// .filter(el => el !== undefined); // FIXME: probably pointless filtering
         }
 
-        return Object.assign(currentState || {}, nextState) as S;
+        return Object.assign(currentState !== undefined ? { ...(currentState as PlainObject) } : {}, nextState) as S;
     }
 
     func.add = (reducer: LFModelReducer<S, A>, namespace?: string, actionType?: string): void => {
